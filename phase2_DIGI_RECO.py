@@ -2,9 +2,9 @@
 # using: 
 # Revision: 1.19 
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
-# with command line options: --python_filename PPD-Phase2Spring24DIGIRECOMiniAOD-00021_2_cfg.py --eventcontent MINIAODSIM --customise SLHCUpgradeSimulations/Configuration/aging.customise_aging_1000,Configuration/DataProcessing/Utils.addMonitoring --datatier GEN-SIM-DIGI-RAW-MINIAOD --inputCommands keep * --fileout file:PPD-Phase2Spring24DIGIRECOMiniAOD-00021.root --conditions 140X_mcRun4_realistic_v4 --customise_commands process.MINIAODSIMoutput.outputCommands.append('keep *_*_*_RECO'); process.MINIAODSIMoutput.outputCommands.append('keep *_*_*_SIM'); --step RAW2DIGI,RECO,RECOSIM,PAT --nThreads 8 --geometry Extended2026D110 --nStreams 2 --filein file:PPD-Phase2Spring24DIGIRECOMiniAOD-00021_0.root --era Phase2C17I13M9 --no_exec --mc -n 15
+# with command line options: --python_filename PPD-Phase2Spring24DIGIRECOMiniAOD-00021_3_cfg.py --eventcontent MINIAODSIM --customise SLHCUpgradeSimulations/Configuration/aging.customise_aging_1000,Configuration/DataProcessing/Utils.addMonitoring --datatier GEN-SIM-DIGI-RAW-MINIAOD --inputCommands keep * --fileout file:PPD-Phase2Spring24DIGIRECOMiniAOD-00021.root --conditions 140X_mcRun4_realistic_v4 --customise_commands process.MINIAODSIMoutput.outputCommands.append('keep *_*_*_RECO'); process.MINIAODSIMoutput.outputCommands.append('keep *_*_*_SIM'); --step RAW2DIGI,RECO,RECOSIM,PAT --nThreads 8 --geometry Extended2026D110 --nStreams 2 --filein file:PPD-Phase2Spring24DIGIRECOMiniAOD-00021_0.root --era Phase2C17I13M9 --no_exec --mc -n 15
 import FWCore.ParameterSet.Config as cms
-from importFED import FEDexclude,FEDinclude 
+# from importFED import FEDexclude,FEDinclude 
 
 from Configuration.Eras.Era_Phase2C17I13M9_cff import Phase2C17I13M9
 
@@ -90,7 +90,7 @@ process.MINIAODSIMoutput = cms.OutputModule("PoolOutputModule",
     dropMetaData = cms.untracked.string('ALL'),
     eventAutoFlushCompressedSize = cms.untracked.int32(-900),
     fastCloning = cms.untracked.bool(False),
-    fileName = cms.untracked.string('file:PPD-Phase2Spring24DIGIRECOMiniAOD-00021.root'),
+    fileName = cms.untracked.string('file:phase2_DIGI_RECO.root'),
     outputCommands = cms.untracked.vstring(
             'drop *',
             'keep FEDRawDataCollection_*_*_*',
@@ -207,7 +207,6 @@ process.Flag_EcalDeadCellTriggerPrimitiveFilter = cms.Path(process.EcalDeadCellT
 process.Flag_HBHENoiseFilter = cms.Path()
 process.Flag_HBHENoiseIsoFilter = cms.Path()
 process.Flag_HcalStripHaloFilter = cms.Path(process.HcalStripHaloFilter)
-process.Flag_METFilters = cms.Path(process.metFilters)
 process.Flag_chargedHadronTrackResolutionFilter = cms.Path(process.chargedHadronTrackResolutionFilter)
 process.Flag_ecalBadCalibFilter = cms.Path(process.ecalBadCalibFilter)
 process.Flag_ecalLaserCorrFilter = cms.Path(process.ecalLaserCorrFilter)
@@ -226,55 +225,55 @@ process.Flag_trkPOG_toomanystripclus53X = cms.Path()
 process.endjob_step = cms.EndPath(process.endOfProcess)
 process.MINIAODSIMoutput_step = cms.EndPath(process.MINIAODSIMoutput)
 
-# Pixel, ECAL, ES, HCAL, Strips, Muons, Other
-pixel_fed_list = (cms.vuint32(tuple(FEDinclude("Pixel"))))
-ecal_fed_list = (cms.vuint32(tuple(FEDinclude("ECAL"))))
-es_fed_list = (cms.vuint32(tuple(FEDinclude("ES"))))
-hcal_fed_list = (cms.vuint32(tuple(FEDinclude("HCAL"))))
-strips_fed_list = (cms.vuint32(tuple(FEDinclude("Strips"))))
-muons_fed_list = (cms.vuint32(tuple(FEDinclude("Muons"))))
-other_fed_list = (cms.vuint32(tuple(FEDinclude("Other"))))
+# # Pixel, ECAL, ES, HCAL, Strips, Muons, Other
+# pixel_fed_list = (cms.vuint32(tuple(FEDinclude("Pixel"))))
+# ecal_fed_list = (cms.vuint32(tuple(FEDinclude("ECAL"))))
+# es_fed_list = (cms.vuint32(tuple(FEDinclude("ES"))))
+# hcal_fed_list = (cms.vuint32(tuple(FEDinclude("HCAL"))))
+# strips_fed_list = (cms.vuint32(tuple(FEDinclude("Strips"))))
+# muons_fed_list = (cms.vuint32(tuple(FEDinclude("Muons"))))
+# other_fed_list = (cms.vuint32(tuple(FEDinclude("Other"))))
 
-process.partialRawDataRepackerPixel = cms.EDProducer( "EvFFEDSelector",
-    inputTag = cms.InputTag( "rawDataCollector" ),
-    fedList = pixel_fed_list
-)
-process.partialRawDataRepackerECAL = cms.EDProducer( "EvFFEDSelector",
-    inputTag = cms.InputTag( "rawDataCollector" ),
-    fedList = ecal_fed_list
-)
-process.partialRawDataRepackerES = cms.EDProducer( "EvFFEDSelector",
-    inputTag = cms.InputTag( "rawDataCollector" ),
-    fedList = es_fed_list
-)
-process.partialRawDataRepackerHCAL = cms.EDProducer( "EvFFEDSelector",
-    inputTag = cms.InputTag( "rawDataCollector" ),
-    fedList = hcal_fed_list
-)
-process.partialRawDataRepackerStrips = cms.EDProducer( "EvFFEDSelector",
-    inputTag = cms.InputTag( "rawDataCollector" ),
-    fedList = strips_fed_list
-)
-process.partialRawDataRepackerMuons = cms.EDProducer( "EvFFEDSelector",
-    inputTag = cms.InputTag( "rawDataCollector" ),
-    fedList = muons_fed_list
-)
-process.partialRawDataRepackerOther = cms.EDProducer( "EvFFEDSelector",
-    inputTag = cms.InputTag( "rawDataCollector" ),
-    fedList = other_fed_list
-)
+# process.partialRawDataRepackerPixel = cms.EDProducer( "EvFFEDSelector",
+#     inputTag = cms.InputTag( "rawDataCollector" ),
+#     fedList = pixel_fed_list
+# )
+# process.partialRawDataRepackerECAL = cms.EDProducer( "EvFFEDSelector",
+#     inputTag = cms.InputTag( "rawDataCollector" ),
+#     fedList = ecal_fed_list
+# )
+# process.partialRawDataRepackerES = cms.EDProducer( "EvFFEDSelector",
+#     inputTag = cms.InputTag( "rawDataCollector" ),
+#     fedList = es_fed_list
+# )
+# process.partialRawDataRepackerHCAL = cms.EDProducer( "EvFFEDSelector",
+#     inputTag = cms.InputTag( "rawDataCollector" ),
+#     fedList = hcal_fed_list
+# )
+# process.partialRawDataRepackerStrips = cms.EDProducer( "EvFFEDSelector",
+#     inputTag = cms.InputTag( "rawDataCollector" ),
+#     fedList = strips_fed_list
+# )
+# process.partialRawDataRepackerMuons = cms.EDProducer( "EvFFEDSelector",
+#     inputTag = cms.InputTag( "rawDataCollector" ),
+#     fedList = muons_fed_list
+# )
+# process.partialRawDataRepackerOther = cms.EDProducer( "EvFFEDSelector",
+#     inputTag = cms.InputTag( "rawDataCollector" ),
+#     fedList = other_fed_list
+# )
 
-# Partial RAW Repacker
-process.partialrawrepackers_step = cms.Path(process.partialRawDataRepackerPixel 
-                                       + process.partialRawDataRepackerECAL
-                                       + process.partialRawDataRepackerES 
-                                    #    + process.partialRawDataRepackerHCAL # Crashing 
-                                       + process.partialRawDataRepackerStrips 
-                                       + process.partialRawDataRepackerMuons 
-                                       + process.partialRawDataRepackerOther)
+# # Partial RAW Repacker
+# process.partialrawrepackers_step = cms.Path(process.partialRawDataRepackerPixel 
+#                                        + process.partialRawDataRepackerECAL
+#                                        + process.partialRawDataRepackerES 
+#                                     #    + process.partialRawDataRepackerHCAL # Crashing 
+#                                        + process.partialRawDataRepackerStrips 
+#                                        + process.partialRawDataRepackerMuons 
+#                                        + process.partialRawDataRepackerOther)
 
 # Schedule definition
-process.schedule = cms.Schedule(process.raw2digi_step,process.reconstruction_step,process.recosim_step,process.Flag_HBHENoiseFilter,process.Flag_HBHENoiseIsoFilter,process.Flag_CSCTightHaloFilter,process.Flag_CSCTightHaloTrkMuUnvetoFilter,process.Flag_CSCTightHalo2015Filter,process.Flag_globalTightHalo2016Filter,process.Flag_globalSuperTightHalo2016Filter,process.Flag_HcalStripHaloFilter,process.Flag_hcalLaserEventFilter,process.Flag_EcalDeadCellTriggerPrimitiveFilter,process.Flag_EcalDeadCellBoundaryEnergyFilter,process.Flag_ecalBadCalibFilter,process.Flag_goodVertices,process.Flag_eeBadScFilter,process.Flag_ecalLaserCorrFilter,process.Flag_trkPOGFilters,process.Flag_chargedHadronTrackResolutionFilter,process.Flag_muonBadTrackFilter,process.Flag_BadChargedCandidateFilter,process.Flag_BadPFMuonFilter,process.Flag_BadPFMuonDzFilter,process.Flag_hfNoisyHitsFilter,process.Flag_BadChargedCandidateSummer16Filter,process.Flag_BadPFMuonSummer16Filter,process.Flag_trkPOG_manystripclus53X,process.Flag_trkPOG_toomanystripclus53X,process.Flag_trkPOG_logErrorTooManyClusters,process.Flag_METFilters,process.endjob_step,process.MINIAODSIMoutput_step)
+process.schedule = cms.Schedule(process.raw2digi_step,process.reconstruction_step,process.recosim_step,process.Flag_HBHENoiseFilter,process.Flag_HBHENoiseIsoFilter,process.Flag_CSCTightHaloFilter,process.Flag_CSCTightHaloTrkMuUnvetoFilter,process.Flag_CSCTightHalo2015Filter,process.Flag_globalTightHalo2016Filter,process.Flag_globalSuperTightHalo2016Filter,process.Flag_HcalStripHaloFilter,process.Flag_hcalLaserEventFilter,process.Flag_EcalDeadCellTriggerPrimitiveFilter,process.Flag_EcalDeadCellBoundaryEnergyFilter,process.Flag_ecalBadCalibFilter,process.Flag_goodVertices,process.Flag_eeBadScFilter,process.Flag_ecalLaserCorrFilter,process.Flag_trkPOGFilters,process.Flag_chargedHadronTrackResolutionFilter,process.Flag_muonBadTrackFilter,process.Flag_BadChargedCandidateFilter,process.Flag_BadPFMuonFilter,process.Flag_BadPFMuonDzFilter,process.Flag_hfNoisyHitsFilter,process.Flag_BadChargedCandidateSummer16Filter,process.Flag_BadPFMuonSummer16Filter,process.Flag_trkPOG_manystripclus53X,process.Flag_trkPOG_toomanystripclus53X,process.Flag_trkPOG_logErrorTooManyClusters,process.endjob_step,process.MINIAODSIMoutput_step)
 process.schedule.associate(process.patTask)
 from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
 associatePatAlgosToolsTask(process)
