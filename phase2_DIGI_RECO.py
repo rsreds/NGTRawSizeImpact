@@ -124,7 +124,9 @@ process.MINIAODSIMoutput = cms.OutputModule("PoolOutputModule",
             'keep *RecHit*_*_*_*',
             'keep *recHit*_*_*_*',
             # 'keep *_siStripMatchedRecHits_*_*',
-            'keep *_generalTracks_*_*'
+            'keep *_generalTracks_*_*',
+            'keep *_mix_*_*',
+            'keep *_*reco*_*_*'
       ),
     overrideBranchesSplitLevel = cms.untracked.VPSet(
         cms.untracked.PSet(
