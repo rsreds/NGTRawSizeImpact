@@ -49,31 +49,17 @@ process.maxEvents = cms.untracked.PSet(
     output = cms.optional.untracked.allowed(cms.int32,cms.PSet)
 )
 
-outputFileName = 'run3_partialRAW_DIGI_RECO_PU.root'
-if pileup:
-    # Input source with PU
-    process.source = cms.Source("PoolSource",
-        secondaryFileNames = cms.untracked.vstring(
-        '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_140X_mcRun3_2024_realistic_v21_STD_2024_PU-v3/2590000/b20570d9-b5e4-4e16-a6a5-c5a7eb7f426d.root'
-    ),
-        fileNames = cms.untracked.vstring(
-        '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-RECO/PU_140X_mcRun3_2024_realistic_v21_STD_2024_PU-v3/2590000/1e4e0463-6540-4868-8941-bba8e9f53129.root',
-    )
-    )
-else:
-    # Input source without PU
-    process.source = cms.Source("PoolSource",
-        secondaryFileNames = cms.untracked.vstring(
-        '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/140X_mcRun3_2024_realistic_v21_STD_RegeneratedGS_2024_noPU-v1/2580000/1e0a12d5-6b27-445e-acce-7d13feb2c276.root',
-        '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/140X_mcRun3_2024_realistic_v21_STD_RegeneratedGS_2024_noPU-v1/2580000/3c827803-0b40-46b9-81c4-3a06753f96e5.root',
-        '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/140X_mcRun3_2024_realistic_v21_STD_RegeneratedGS_2024_noPU-v1/2580000/53083372-757d-4d04-81a4-875269adc0fe.root',
-        '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/140X_mcRun3_2024_realistic_v21_STD_RegeneratedGS_2024_noPU-v1/2580000/58a68670-84c5-4aed-9dad-47c09623066f.root'
-    ),
-        fileNames = cms.untracked.vstring(
-        '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-RECO/140X_mcRun3_2024_realistic_v21_STD_RegeneratedGS_2024_noPU-v1/2580000/19b2cbe8-4c79-4ae8-95af-ae9a3f4fc121.root',
-    )
-    )
-    outputFileName = 'run3_partialRAW_DIGI_RECO_noPU.root'
+outputFileName = 'run3_data_partialRAW_DIGI_RECO.root'
+
+# Input source
+process.source = cms.Source("PoolSource",
+    fileNames = cms.untracked.vstring('/store/data/Run2024F/Muon0/RAW-RECO/ZMu-PromptReco-v1/000/382/216/00000/aadd1ab9-4eb8-4fb2-ac62-bdd1bebe882e.root'),
+    secondaryFileNames = cms.untracked.vstring('/store/data/Run2024F/Muon0/RAW/v1/000/382/216/00000/6371d4f3-434e-4222-bc48-5edb252e5590.root',
+                                            '/store/data/Run2024F/Muon0/RAW/v1/000/382/216/00000/806325bc-6f02-4157-a8fd-b11f7728700d.root',
+                                            '/store/data/Run2024F/Muon0/RAW/v1/000/382/216/00000/c0fa023c-10f2-4259-8d79-e8c8b0f67caa.root',
+                                            '/store/data/Run2024F/Muon0/RAW/v1/000/382/216/00000/f25d968b-0b83-4d46-89ef-fd96e2dd8a70.root')
+)
+
 
 process.options = cms.untracked.PSet(
     IgnoreCompletely = cms.untracked.vstring(),
@@ -184,7 +170,7 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
 
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, globaltag = '140X_mcRun3_2024_realistic_v21')
+process.GlobalTag = GlobalTag(process.GlobalTag, globaltag = '140X_dataRun3_Prompt_v4')
 
 # Path and EndPath definitions
 process.raw2digi_step = cms.Path(process.RawToDigi)
