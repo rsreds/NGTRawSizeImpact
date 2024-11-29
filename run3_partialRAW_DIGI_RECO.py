@@ -3,9 +3,33 @@
 # Revision: 1.19 
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
 # with command line options: step3 --conditions auto:run3_data_prompt_relval -s RAW2DIGI --datatier DIGI --eventcontent RECO --data --process reRECO --scenario pp --era Run3 --customise Configuration/DataProcessing/RecoTLR.customisePostEra_Run3 -n 100 --filein /store/data/Run2024F/Muon0/RAW-RECO/ZMu-PromptReco-v1/000/382/216/00000/aadd1ab9-4eb8-4fb2-ac62-bdd1bebe882e.root
+import sys
+import argparse
 from importFED import FEDexclude,FEDinclude 
 import FWCore.ParameterSet.Config as cms
 from Configuration.Eras.Era_Run3_cff import Run3
+
+# Argument parsing setup
+parser = argparse.ArgumentParser(description="Configuration script for CMSSW Run 3 event size analysis.")
+group = parser.add_mutually_exclusive_group()  # Create a group for mutually exclusive flags
+group.add_argument(
+    '--pu', 
+    action='store_true', 
+    help="Run with pileup (PU). This is the default."
+)
+group.add_argument(
+    '--nopu', 
+    action='store_true', 
+    help="Run without pileup (no PU)."
+)
+
+args = parser.parse_args()
+
+pileup = True
+if args.nopu:
+    pileup=False
+
+# Process setup
 
 process = cms.Process('reRECO',Run3)
 
@@ -25,28 +49,31 @@ process.maxEvents = cms.untracked.PSet(
     output = cms.optional.untracked.allowed(cms.int32,cms.PSet)
 )
 
-# Input source with PU
-process.source = cms.Source("PoolSource",
-    secondaryFileNames = cms.untracked.vstring(
-    '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_140X_mcRun3_2024_realistic_v21_STD_2024_PU-v3/2590000/b20570d9-b5e4-4e16-a6a5-c5a7eb7f426d.root'
-),
-    fileNames = cms.untracked.vstring(
-    '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-RECO/PU_140X_mcRun3_2024_realistic_v21_STD_2024_PU-v3/2590000/1e4e0463-6540-4868-8941-bba8e9f53129.root',
-)
-)
-
-# # Input source without PU
-# process.source = cms.Source("PoolSource",
-#     secondaryFileNames = cms.untracked.vstring(
-#     '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/140X_mcRun3_2024_realistic_v21_STD_RegeneratedGS_2024_noPU-v1/2580000/1e0a12d5-6b27-445e-acce-7d13feb2c276.root',
-#     '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/140X_mcRun3_2024_realistic_v21_STD_RegeneratedGS_2024_noPU-v1/2580000/3c827803-0b40-46b9-81c4-3a06753f96e5.root',
-#     '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/140X_mcRun3_2024_realistic_v21_STD_RegeneratedGS_2024_noPU-v1/2580000/53083372-757d-4d04-81a4-875269adc0fe.root',
-#     '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/140X_mcRun3_2024_realistic_v21_STD_RegeneratedGS_2024_noPU-v1/2580000/58a68670-84c5-4aed-9dad-47c09623066f.root'
-# ),
-#     fileNames = cms.untracked.vstring(
-#     '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-RECO/140X_mcRun3_2024_realistic_v21_STD_RegeneratedGS_2024_noPU-v1/2580000/19b2cbe8-4c79-4ae8-95af-ae9a3f4fc121.root',
-# )
-# )
+outputFileName = 'run3_partialRAW_DIGI_RECO_PU.root'
+if pileup:
+    # Input source with PU
+    process.source = cms.Source("PoolSource",
+        secondaryFileNames = cms.untracked.vstring(
+        '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/PU_140X_mcRun3_2024_realistic_v21_STD_2024_PU-v3/2590000/b20570d9-b5e4-4e16-a6a5-c5a7eb7f426d.root'
+    ),
+        fileNames = cms.untracked.vstring(
+        '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-RECO/PU_140X_mcRun3_2024_realistic_v21_STD_2024_PU-v3/2590000/1e4e0463-6540-4868-8941-bba8e9f53129.root',
+    )
+    )
+else:
+    # Input source without PU
+    process.source = cms.Source("PoolSource",
+        secondaryFileNames = cms.untracked.vstring(
+        '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/140X_mcRun3_2024_realistic_v21_STD_RegeneratedGS_2024_noPU-v1/2580000/1e0a12d5-6b27-445e-acce-7d13feb2c276.root',
+        '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/140X_mcRun3_2024_realistic_v21_STD_RegeneratedGS_2024_noPU-v1/2580000/3c827803-0b40-46b9-81c4-3a06753f96e5.root',
+        '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/140X_mcRun3_2024_realistic_v21_STD_RegeneratedGS_2024_noPU-v1/2580000/53083372-757d-4d04-81a4-875269adc0fe.root',
+        '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-DIGI-RAW/140X_mcRun3_2024_realistic_v21_STD_RegeneratedGS_2024_noPU-v1/2580000/58a68670-84c5-4aed-9dad-47c09623066f.root'
+    ),
+        fileNames = cms.untracked.vstring(
+        '/store/relval/CMSSW_14_2_0_pre1/RelValTTbar_14TeV/GEN-SIM-RECO/140X_mcRun3_2024_realistic_v21_STD_RegeneratedGS_2024_noPU-v1/2580000/19b2cbe8-4c79-4ae8-95af-ae9a3f4fc121.root',
+    )
+    )
+    outputFileName = 'run3_partialRAW_DIGI_RECO_noPU.root'
 
 process.options = cms.untracked.PSet(
     IgnoreCompletely = cms.untracked.vstring(),
@@ -131,7 +158,7 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
         dataTier = cms.untracked.string('DIGI'),
         filterName = cms.untracked.string('')
     ),
-    fileName = cms.untracked.string('run3_partialRAW_DIGI_RECO_PU.root'),
+    fileName = cms.untracked.string(outputFileName),
     SelectEvents = cms.untracked.PSet(  SelectEvents = cms.vstring( 'partialrawrepackers_step' ) ),
     outputCommands = cms.untracked.vstring(
             'drop *',

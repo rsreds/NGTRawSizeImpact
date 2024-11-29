@@ -30,6 +30,8 @@ To run the config file,
 cmsRun run3_partialRAW_DIGI_RECO.py
 ```
 
+Pass the --nopu option to run without pileup.
+
 By running the cmsRun command will produce the output file, which only has the contribution of:
  - raw
  - digis
