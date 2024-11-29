@@ -10,16 +10,18 @@ cd NGTRawSizeImpact
 ```
 ## Re-run configuration for RAW event size per detector
 
-The config file used for the study of each FED contribution is `prehlt_FED.py`.
+The config file used for the study of each FED contribution is `run3_data_partialRAW.py`.
 The file **FEDlist.py** contains the pin info of each detector.
 To run the config file,
 
 ```
-cmsRun prehlt_FED.py
+cmsRun run3_data_partialRAW.py
 ```
 
 By running the cmsRun command will produce the output file, which only has the contribution of given detector FED. 
-The average compressed size of  **FEDRawDataCollection_rawPrimeDataRepacker__HLTX** can be found by `edmEventSize -v <outputFile>`.
+The average compressed size of  **`FEDRawDataCollection_*_*_*`** can be found by `edmEventSize -v <outputFile>`.
+
+> :warning: If run with `cmsRun run3_data_partialRAW.py --includeHCAL` it will crash, as the FED ids for HCAL cause some not yet identified issues.
 
 ## Re-run configuration for Run 3 event size
 
