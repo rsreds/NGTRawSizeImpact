@@ -57,7 +57,8 @@ process.source = cms.Source("PoolSource",
     secondaryFileNames = cms.untracked.vstring('/store/data/Run2024F/Muon0/RAW/v1/000/382/216/00000/6371d4f3-434e-4222-bc48-5edb252e5590.root',
                                             '/store/data/Run2024F/Muon0/RAW/v1/000/382/216/00000/806325bc-6f02-4157-a8fd-b11f7728700d.root',
                                             '/store/data/Run2024F/Muon0/RAW/v1/000/382/216/00000/c0fa023c-10f2-4259-8d79-e8c8b0f67caa.root',
-                                            '/store/data/Run2024F/Muon0/RAW/v1/000/382/216/00000/f25d968b-0b83-4d46-89ef-fd96e2dd8a70.root')
+                                            '/store/data/Run2024F/Muon0/RAW/v1/000/382/216/00000/f25d968b-0b83-4d46-89ef-fd96e2dd8a70.root'),
+    lumisToProcess = cms.untracked.VLuminosityBlockRange('382216:167-382216:388')
 )
 
 
